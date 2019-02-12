@@ -1,4 +1,7 @@
 # delimiter
+Lightweight data editing, robust possibilities. Edit CSV files in the browser and sync them with GitHub.
+
+> **Status:** Work in progress
 
 ## Project setup
 ```
