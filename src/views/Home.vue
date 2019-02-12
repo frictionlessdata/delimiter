@@ -21,7 +21,8 @@
                 v-model="csvUrl"
                 class="input"
                 type="url"
-                placeholder="https://github.com/user/repo/blob/master/data.csv">
+                placeholder="https://github.com/user/repo/blob/master/data.csv"
+                required>
               <p class="help">
                 Raw or UI URLs will work
               </p>
@@ -61,7 +62,7 @@ export default {
   },
   methods: {
     openFile () {
-      this.$router.push(this.fileUrl)
+      this.$router.push(`/edit${this.fileUrl}`)
     }
   }
 }
