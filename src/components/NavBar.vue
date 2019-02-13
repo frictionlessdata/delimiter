@@ -33,12 +33,26 @@
           Home
         </router-link>
       </div>
+      <div class="navbar-end">
+        <router-link
+          v-if="isFileLoaded"
+          to="/compare"
+          class="navbar-item">
+          <font-awesome-icon icon="save" />
+        </router-link>
+      </div>
     </div>
   </nav>
 </template>
 
 <script>
 export default {
+  props: {
+    isFileLoaded: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
       isExpanded: false

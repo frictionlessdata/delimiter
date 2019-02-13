@@ -7,9 +7,9 @@
       {{ error }}
     </div>
     <HotTable
-      v-if="fileContents"
+      v-if="fileData"
       ref="hot"
-      :data="fileContents"
+      :data="fileData"
       :col-headers="true"
       :row-headers="true"
       stretch-h="all"
@@ -20,10 +20,11 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 import { HotTable } from '@handsontable/vue'
 import { Loading } from 'buefy/dist/components/loading'
 import pick from 'lodash/pick'
+
 
 export default {
   components: {
@@ -54,9 +55,11 @@ export default {
       error: null
     }
   },
-  computed: mapState({
-    fileContents: (state) => state.fileContents
-  }),
+  computed: {
+    ...mapState({
+      fileData: (state) => state.fileData
+    })
+  },
   watch: {
     origin: 'fetch',
     repo: 'fetch',
@@ -68,14 +71,17 @@ export default {
   },
   methods: {
     ...mapActions([
-      'getFileContents'
+      'getFileData'
     ]),
+    ...mapMutations({
+      setFileData: 'SET_FILE_DATA'
+    }),
     async fetch () {
       this.isLoading = true
       this.error = null
       try {
-        const payload = pick(this, ['origin', 'repo', 'branch', 'path'])
-        await this.getFileContents(payload)
+        const fileLocation = pick(this, ['origin', 'repo', 'branch', 'path'])
+        await this.getFileData(fileLocation)
       } catch (err) {
         this.error = err.message
       } finally {
