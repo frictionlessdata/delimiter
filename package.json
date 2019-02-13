@@ -10,8 +10,10 @@
   "dependencies": {
     "@handsontable/vue": "^3.1.0",
     "@octokit/rest": "^16.15.0",
+    "buefy": "^0.7.2",
     "bulma": "^0.7.4",
     "handsontable": "^6.2.2",
+    "lodash": "^4.17.11",
     "papaparse": "^4.6.3",
     "vue": "^2.5.22",
     "vue-router": "^3.0.1",
@@ -43,9 +45,12 @@
       "parser": "babel-eslint"
     },
     "rules": {
-      "vue/html-closing-bracket-newline": ["error", {
-        "multiline": "never"
-      }]
+      "vue/html-closing-bracket-newline": [
+        "error",
+        {
+          "multiline": "never"
+        }
+      ]
     }
   },
   "postcss": {

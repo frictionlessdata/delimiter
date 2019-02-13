@@ -24,4 +24,5 @@ $primary: $orange
 $family-sans-serif: "Raleway", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
 
 @import "~bulma"
+@import "~buefy/src/scss/buefy"
 </style>
