@@ -15,7 +15,7 @@ export default {
     NavBar
   },
   computed: mapState({
-    isFileLoaded: (state) => !!state.fileData
+    isFileLoaded: (state) => !!state.file.data
   })
 }
 </script>

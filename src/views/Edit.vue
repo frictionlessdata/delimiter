@@ -20,11 +20,11 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { HotTable } from '@handsontable/vue'
 import { Loading } from 'buefy/dist/components/loading'
 import pick from 'lodash/pick'
-
+import isEqual from 'lodash/isEqual'
 
 export default {
   components: {
@@ -57,8 +57,14 @@ export default {
   },
   computed: {
     ...mapState({
-      fileData: (state) => state.fileData
-    })
+      fileData: (state) => state.file.data,
+      isFileLoaded (state) {
+        return !!this.fileData && isEqual(this.fileLocation, state.file.location)
+      }
+    }),
+    fileLocation () {
+      return pick(this, ['origin', 'repo', 'branch', 'path'])
+    }
   },
   watch: {
     origin: 'fetch',
@@ -67,21 +73,17 @@ export default {
     path: 'fetch'
   },
   created () {
-    this.fetch()
+    if (!this.isFileLoaded) this.fetch()
   },
   methods: {
     ...mapActions([
       'getFileData'
     ]),
-    ...mapMutations({
-      setFileData: 'SET_FILE_DATA'
-    }),
     async fetch () {
       this.isLoading = true
       this.error = null
       try {
-        const fileLocation = pick(this, ['origin', 'repo', 'branch', 'path'])
-        await this.getFileData(fileLocation)
+        await this.getFileData(this.fileLocation)
       } catch (err) {
         this.error = err.message
       } finally {

@@ -24,8 +24,8 @@ export default {
     DiffTable
   },
   computed: mapState({
-    isFileLoaded: (state) => !!state.fileData,
-    fileDiff: (state) => state.fileDiff
+    isFileLoaded: (state) => !!state.file.data,
+    fileDiff: (state) => state.file.diff
   }),
   created () {
     if (this.isFileLoaded) this.createDiff()
