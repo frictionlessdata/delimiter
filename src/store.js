@@ -4,6 +4,7 @@ import Octokit from '@octokit/rest'
 import Papa from 'papaparse'
 import daff from 'daff/lib/core'
 import cloneDeep from 'lodash/cloneDeep'
+import createPersistedState from 'vuex-persistedstate'
 
 import { decode } from '@/util'
 
@@ -27,6 +28,12 @@ export default new Vuex.Store({
       diff: null
     }
   },
+  plugins: [
+    createPersistedState({
+      paths: ['file'],
+      storage: window.sessionStorage
+    })
+  ],
   mutations: {
     SET_FILE_LOCATION (state, { origin, repo, branch, path }) {
       state.file.location.origin = origin
