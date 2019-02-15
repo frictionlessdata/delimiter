@@ -16,6 +16,8 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import pick from 'lodash/pick'
+import isEqual from 'lodash/isEqual'
 
 import DiffTable from '@/components/DiffTable'
 
@@ -24,11 +26,17 @@ export default {
     DiffTable
   },
   computed: mapState({
-    isFileLoaded: (state) => !!state.file.data,
-    fileDiff: (state) => state.file.diff
+    isFileLoaded (state) {
+      return !!state.file.data && isEqual(this.routeFileLocation, state.file.location)
+    },
+    fileDiff: (state) => state.file.diff,
+    routeFileLocation (state) {
+      return pick(state.route.params, ['origin', 'repo', 'branch', 'path'])
+    }
   }),
   created () {
     if (this.isFileLoaded) this.createDiff()
+    // TODO: else redirect to /edit/
   },
   methods: {
     ...mapActions([

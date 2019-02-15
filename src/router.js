@@ -18,11 +18,10 @@ export default new Router({
     {
       path: '/edit/:origin/:repo/:branch/:path*',
       name: 'edit',
-      component: Edit,
-      props: true
+      component: Edit
     },
     {
-      path: '/compare',
+      path: '/compare/:origin/:repo/:branch/:path*',
       name: 'compare',
       component: Compare
     }

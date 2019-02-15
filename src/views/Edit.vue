@@ -31,46 +31,23 @@ export default {
     HotTable,
     Loading
   },
-  props: {
-    origin: {
-      type: String,
-      required: true
-    },
-    repo: {
-      type: String,
-      required: true
-    },
-    branch: {
-      type: String,
-      required: true
-    },
-    path: {
-      type: String,
-      required: true
-    }
-  },
   data () {
     return {
       isLoading: false,
       error: null
     }
   },
-  computed: {
-    ...mapState({
-      fileData: (state) => state.file.data,
-      isFileLoaded (state) {
-        return !!this.fileData && isEqual(this.fileLocation, state.file.location)
-      }
-    }),
-    fileLocation () {
-      return pick(this, ['origin', 'repo', 'branch', 'path'])
+  computed: mapState({
+    fileData: (state) => state.file.data,
+    isFileLoaded (state) {
+      return !!this.fileData && isEqual(this.fileLocation, state.file.location)
+    },
+    fileLocation (state) {
+      return pick(state.route.params, ['origin', 'repo', 'branch', 'path'])
     }
-  },
+  }),
   watch: {
-    origin: 'fetch',
-    repo: 'fetch',
-    ref: 'fetch',
-    path: 'fetch'
+    fileLocation: 'fetch'
   },
   created () {
     if (!this.isFileLoaded) this.fetch()

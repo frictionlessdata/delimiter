@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { sync } from 'vuex-router-sync'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -9,6 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 Vue.config.productionTip = false
 library.add(faSave)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
+sync(store, router)
 
 new Vue({
   router,

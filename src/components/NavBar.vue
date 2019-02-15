@@ -36,7 +36,7 @@
       <div class="navbar-end">
         <router-link
           v-if="isFileLoaded"
-          to="/compare"
+          :to="saveLink"
           class="navbar-item">
           <font-awesome-icon icon="save" />
         </router-link>
@@ -51,11 +51,21 @@ export default {
     isFileLoaded: {
       type: Boolean,
       default: false
+    },
+    fileLocation: {
+      type: Object,
+      default: () => ({})
     }
   },
   data () {
     return {
       isExpanded: false
+    }
+  },
+  computed: {
+    saveLink () {
+      const { origin, repo, branch, path } = this.fileLocation
+      return `/compare/${origin}/${repo}/${branch}/${path}`
     }
   }
 }

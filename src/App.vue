@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <NavBar :is-file-loaded="isFileLoaded" />
+    <NavBar
+      :is-file-loaded="isFileLoaded"
+      :file-location="fileLocation" />
     <router-view />
   </div>
 </template>
@@ -15,7 +17,8 @@ export default {
     NavBar
   },
   computed: mapState({
-    isFileLoaded: (state) => !!state.file.data
+    isFileLoaded: (state) => !!state.file.data,
+    fileLocation: (state) => state.file.location
   })
 }
 </script>
