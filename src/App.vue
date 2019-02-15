@@ -29,7 +29,7 @@ export default {
 $orange: #EB6619
 $grey-darker: #262626
 $primary: $orange
-$family-sans-serif: "Raleway", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
+$family-primary: "Raleway", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
 $navbar-breakpoint: 0
 
 @import "~bulma"

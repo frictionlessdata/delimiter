@@ -9,6 +9,7 @@
     <HotTable
       v-if="fileData"
       ref="hot"
+      class="is-family-secondary"
       :data="fileData"
       :col-headers="true"
       :row-headers="true"
