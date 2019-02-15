@@ -47,12 +47,25 @@
             </router-link>
           </p>
         </div>
+        <div
+          v-if="isLoggedIn"
+          class="navbar-item">
+          <span>Logged in</span>
+        </div>
+        <a
+          v-else
+          :href="loginLink"
+          class="navbar-item">
+          Login
+        </a>
       </div>
     </div>
   </nav>
 </template>
 
 <script>
+import { stringify } from 'query-string'
+
 export default {
   props: {
     isFileLoaded: {
@@ -62,6 +75,10 @@ export default {
     fileLocation: {
       type: Object,
       default: () => ({})
+    },
+    isLoggedIn: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -73,6 +90,15 @@ export default {
     saveLink () {
       const { origin, repo, branch, path } = this.fileLocation
       return `/compare/${origin}/${repo}/${branch}/${path}`
+    },
+    loginLink () {
+      const githubUrl = 'https://github.com/login/oauth/authorize'
+      const params = {
+        client_id: process.env.VUE_APP_GITHUB_CLIENT_ID,
+        redirect_uri: window.location.href,
+        scope: 'public_repo'
+      }
+      return `${githubUrl}?${stringify(params)}`
     }
   }
 }

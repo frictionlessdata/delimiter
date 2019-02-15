@@ -5,7 +5,10 @@ import Papa from 'papaparse'
 import daff from 'daff/lib/core'
 import cloneDeep from 'lodash/cloneDeep'
 import createPersistedState from 'vuex-persistedstate'
+import axios from 'axios'
+import omit from 'lodash/omit'
 
+import router from './router'
 import { decode } from '@/util'
 
 Vue.use(Vuex)
@@ -15,6 +18,7 @@ const octokit = new Octokit()
 export default new Vuex.Store({
   strict: true,
   state: {
+    authToken: null,
     file: {
       location: {
         origin: null,
@@ -30,11 +34,14 @@ export default new Vuex.Store({
   },
   plugins: [
     createPersistedState({
-      paths: ['file'],
+      paths: ['file', 'authToken'],
       storage: window.sessionStorage
     })
   ],
   mutations: {
+    SET_AUTH_TOKEN (state, authToken) {
+      state.authToken = authToken
+    },
     SET_FILE_LOCATION (state, { origin, repo, branch, path }) {
       state.file.location.origin = origin
       state.file.location.repo = repo
@@ -63,6 +70,13 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    async finishLogin ({ commit, state }, authCode) {
+      const url = `${process.env.VUE_APP_GATEKEEPER_HOST}/authenticate/${authCode}`
+      const response = await axios.get(url)
+      commit('SET_AUTH_TOKEN', response.data.token)
+      const queryWithoutCode = omit(state.route.query, 'code')
+      router.replace({ query: queryWithoutCode })
+    },
     async getFileData ({ commit, dispatch }, fileLocation) {
       commit('RESET_FILE')
       commit('SET_FILE_LOCATION', fileLocation)
