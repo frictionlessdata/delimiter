@@ -34,12 +34,19 @@
         </router-link>
       </div>
       <div class="navbar-end">
-        <router-link
-          v-if="isFileLoaded"
-          :to="saveLink"
-          class="navbar-item">
-          <font-awesome-icon icon="save" />
-        </router-link>
+        <div class="navbar-item">
+          <p class="control">
+            <router-link
+              v-if="isFileLoaded"
+              :to="saveLink"
+              class="button">
+              <span class="icon">
+                <font-awesome-icon icon="save" />
+              </span>
+              <span>Save</span>
+            </router-link>
+          </p>
+        </div>
       </div>
     </div>
   </nav>
