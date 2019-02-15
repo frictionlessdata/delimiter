@@ -77,7 +77,7 @@ export default {
 
 #hot-container
   width: 100vw
-  height: 100vh
+  height: calc(100vh - 52px) // minus navbar height
   overflow: hidden
 
 .notification.is-danger
