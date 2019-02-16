@@ -2,13 +2,15 @@
   <div id="app">
     <NavBar
       :is-file-loaded="isFileLoaded"
-      :file-location="fileLocation" />
+      :file-location="fileLocation"
+      :user="user"
+      @logout="resetUser" />
     <router-view />
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 import NavBar from '@/components/NavBar'
 
@@ -18,8 +20,23 @@ export default {
   },
   computed: mapState({
     isFileLoaded: (state) => !!state.file.data,
-    fileLocation: (state) => state.file.location
-  })
+    fileLocation: (state) => state.file.location,
+    authCode: (state) => state.route.query.code,
+    user: (state) => state.user
+  }),
+  created () {
+    if (this.authCode) {
+      this.finishLogin(this.authCode)
+    }
+  },
+  methods: {
+    ...mapActions([
+      'finishLogin'
+    ]),
+    ...mapMutations({
+      resetUser: 'RESET_USER'
+    })
+  }
 }
 </script>
 

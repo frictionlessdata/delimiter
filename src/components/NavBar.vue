@@ -13,10 +13,10 @@
       <a
         role="button"
         class="navbar-burger burger"
-        :class="{ 'is-active': isExpanded }"
+        :class="{ 'is-active': isNavBarExpanded }"
         aria-label="menu"
         aria-expanded="false"
-        @click="isExpanded = !isExpanded">
+        @click="isNavBarExpanded = !isNavBarExpanded">
         <span aria-hidden="true" />
         <span aria-hidden="true" />
         <span aria-hidden="true" />
@@ -25,7 +25,7 @@
 
     <div
       class="navbar-menu"
-      :class="{ 'is-active': isExpanded }">
+      :class="{ 'is-active': isNavBarExpanded }">
       <div class="navbar-start">
         <router-link
           to="/"
@@ -47,12 +47,37 @@
             </router-link>
           </p>
         </div>
+        <div
+          v-if="isLoggedIn"
+          class="navbar-item has-dropdown"
+          :class="{'is-active': isDropdownExpanded}">
+          <a
+            class="navbar-link"
+            @click="isDropdownExpanded = !isDropdownExpanded">
+            {{ user.username }}
+          </a>
+          <div class="navbar-dropdown is-right">
+            <a
+              class="navbar-item"
+              @click.prevent="$emit('logout')">
+              Logout
+            </a>
+          </div>
+        </div>
+        <a
+          v-else
+          :href="loginLink"
+          class="navbar-item">
+          Login
+        </a>
       </div>
     </div>
   </nav>
 </template>
 
 <script>
+import { stringify } from 'query-string'
+
 export default {
   props: {
     isFileLoaded: {
@@ -62,17 +87,34 @@ export default {
     fileLocation: {
       type: Object,
       default: () => ({})
+    },
+    user: {
+      type: Object,
+      default: () => ({})
     }
   },
   data () {
     return {
-      isExpanded: false
+      isNavBarExpanded: false,
+      isDropdownExpanded: false
     }
   },
   computed: {
+    isLoggedIn () {
+      return !!this.user.authToken
+    },
     saveLink () {
       const { origin, repo, branch, path } = this.fileLocation
       return `/compare/${origin}/${repo}/${branch}/${path}`
+    },
+    loginLink () {
+      const githubUrl = 'https://github.com/login/oauth/authorize'
+      const params = {
+        client_id: process.env.VUE_APP_GITHUB_CLIENT_ID,
+        redirect_uri: window.location.href,
+        scope: 'public_repo'
+      }
+      return `${githubUrl}?${stringify(params)}`
     }
   }
 }

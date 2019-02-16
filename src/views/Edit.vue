@@ -16,12 +16,13 @@
       stretch-h="all"
       :manual-column-resize="true"
       :manual-row-resize="true"
+      :after-change="onChange"
       col-widths="200px" />
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 import { HotTable } from '@handsontable/vue'
 import { Loading } from 'buefy/dist/components/loading'
 import pick from 'lodash/pick'
@@ -57,6 +58,9 @@ export default {
     ...mapActions([
       'getFileData'
     ]),
+    ...mapMutations({
+      setFileData: 'SET_FILE_DATA'
+    }),
     async fetch () {
       this.isLoading = true
       this.error = null
@@ -67,6 +71,12 @@ export default {
       } finally {
         this.isLoading = false
       }
+    },
+    onChange () {
+      // Handsontable mutates the `data` object passed to it,
+      // so this isn't for traditional flux-style updates. Rather,
+      // it's only necessary to persist the data to sessionStorage.
+      this.setFileData(this.fileData)
     }
   }
 }
