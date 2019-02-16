@@ -13,10 +13,10 @@
       <a
         role="button"
         class="navbar-burger burger"
-        :class="{ 'is-active': isExpanded }"
+        :class="{ 'is-active': isNavBarExpanded }"
         aria-label="menu"
         aria-expanded="false"
-        @click="isExpanded = !isExpanded">
+        @click="isNavBarExpanded = !isNavBarExpanded">
         <span aria-hidden="true" />
         <span aria-hidden="true" />
         <span aria-hidden="true" />
@@ -25,7 +25,7 @@
 
     <div
       class="navbar-menu"
-      :class="{ 'is-active': isExpanded }">
+      :class="{ 'is-active': isNavBarExpanded }">
       <div class="navbar-start">
         <router-link
           to="/"
@@ -49,8 +49,20 @@
         </div>
         <div
           v-if="isLoggedIn"
-          class="navbar-item">
-          <span>Logged in</span>
+          class="navbar-item has-dropdown"
+          :class="{'is-active': isDropdownExpanded}">
+          <a
+            class="navbar-link"
+            @click="isDropdownExpanded = !isDropdownExpanded">
+            {{ user.username }}
+          </a>
+          <div class="navbar-dropdown is-right">
+            <a
+              class="navbar-item"
+              @click.prevent="$emit('logout')">
+              Logout
+            </a>
+          </div>
         </div>
         <a
           v-else
@@ -76,17 +88,21 @@ export default {
       type: Object,
       default: () => ({})
     },
-    isLoggedIn: {
-      type: Boolean,
-      default: false
+    user: {
+      type: Object,
+      default: () => ({})
     }
   },
   data () {
     return {
-      isExpanded: false
+      isNavBarExpanded: false,
+      isDropdownExpanded: false
     }
   },
   computed: {
+    isLoggedIn () {
+      return !!this.user.authToken
+    },
     saveLink () {
       const { origin, repo, branch, path } = this.fileLocation
       return `/compare/${origin}/${repo}/${branch}/${path}`

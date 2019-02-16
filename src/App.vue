@@ -3,13 +3,14 @@
     <NavBar
       :is-file-loaded="isFileLoaded"
       :file-location="fileLocation"
-      :is-logged-in="isLoggedIn" />
+      :user="user"
+      @logout="resetUser" />
     <router-view />
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 import NavBar from '@/components/NavBar'
 
@@ -21,16 +22,21 @@ export default {
     isFileLoaded: (state) => !!state.file.data,
     fileLocation: (state) => state.file.location,
     authCode: (state) => state.route.query.code,
-    isLoggedIn: (state) => !!state.authToken
+    user: (state) => state.user
   }),
   created () {
     if (this.authCode) {
       this.finishLogin(this.authCode)
     }
   },
-  methods: mapActions([
-    'finishLogin'
-  ])
+  methods: {
+    ...mapActions([
+      'finishLogin'
+    ]),
+    ...mapMutations({
+      resetUser: 'RESET_USER'
+    })
+  }
 }
 </script>
 

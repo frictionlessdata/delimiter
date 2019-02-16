@@ -13,12 +13,14 @@ import { decode } from '@/util'
 
 Vue.use(Vuex)
 
-const octokit = new Octokit()
-
 export default new Vuex.Store({
   strict: true,
   state: {
-    authToken: null,
+    user: {
+      authToken: null,
+      username: null,
+      avatarUrl: null
+    },
     file: {
       location: {
         origin: null,
@@ -34,13 +36,22 @@ export default new Vuex.Store({
   },
   plugins: [
     createPersistedState({
-      paths: ['file', 'authToken'],
+      paths: ['file', 'user'],
       storage: window.sessionStorage
     })
   ],
   mutations: {
-    SET_AUTH_TOKEN (state, authToken) {
-      state.authToken = authToken
+    SET_USER_AUTH_TOKEN (state, authToken) {
+      state.user.authToken = authToken
+    },
+    SET_USER_INFO (state, { username, avatarUrl }) {
+      state.user.username = username
+      state.user.avatarUrl = avatarUrl
+    },
+    RESET_USER (state) {
+      state.user.authToken = null
+      state.user.username = null
+      state.user.avatarUrl = null
     },
     SET_FILE_LOCATION (state, { origin, repo, branch, path }) {
       state.file.location.origin = origin
@@ -70,12 +81,26 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async finishLogin ({ commit, state }, authCode) {
+    async finishLogin ({ commit, dispatch, state }, authCode) {
       const url = `${process.env.VUE_APP_GATEKEEPER_HOST}/authenticate/${authCode}`
       const response = await axios.get(url)
-      commit('SET_AUTH_TOKEN', response.data.token)
+      const token = response.data.token
+      commit('SET_USER_AUTH_TOKEN', token)
+
       const queryWithoutCode = omit(state.route.query, 'code')
       router.replace({ query: queryWithoutCode })
+
+      dispatch('getUser')
+    },
+    async getUser ({ commit, state }) {
+      const token = state.user.authToken
+      const octokit = new Octokit({ auth: `token ${token}` })
+      const response = await octokit.users.getAuthenticated()
+      const userInfo = {
+        username: response.data.login,
+        avatarUrl: response.data.avatar_url
+      }
+      commit('SET_USER_INFO', userInfo)
     },
     async getFileData ({ commit, dispatch }, fileLocation) {
       commit('RESET_FILE')
@@ -84,6 +109,7 @@ export default new Vuex.Store({
       await dispatch('parseFileData', fileContents)
     },
     async getFileContents ({ commit, dispatch }, { origin, repo, branch, path }) {
+      const octokit = new Octokit()
       const response = await octokit.repos.getContents({
         owner: origin,
         repo,
