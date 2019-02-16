@@ -2,14 +2,16 @@
   <table class="table is-bordered is-narrow is-fullwidth">
     <thead>
       <tr>
+        <!-- eslint-disable-next-line vue/require-v-for-key -->
         <th v-for="col in head">
           {{ col }}
         </th>
       </tr>
     </thead>
     <tbody>
-      <tr
-        v-for="row in tail">
+      <!-- eslint-disable-next-line vue/require-v-for-key -->
+      <tr v-for="row in tail">
+        <!-- eslint-disable-next-line vue/require-v-for-key -->
         <td
           v-for="col in row"
           :class="{'is-selected': col.includes('->')}">
