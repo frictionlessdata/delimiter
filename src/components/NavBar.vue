@@ -7,7 +7,7 @@
       <router-link
         class="navbar-item"
         to="/">
-        Delimeter
+        Delimiter
       </router-link>
 
       <a
