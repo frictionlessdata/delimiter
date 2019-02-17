@@ -59,9 +59,15 @@ export default new Vuex.Store({
       state.file.location.branch = branch
       state.file.location.path = path
     },
-    SET_FILE_DATA (state, data) {
+    SET_FILE_DATA_AND_ORIGINAL (state, data) {
       state.file.data = data
       state.file.originalData = cloneDeep(data)
+    },
+    // Since handsontable mutates its data directly, flux-style data flow isn't
+    // really possible. But we do this to at least tell vuex it was updated, so
+    // that vuex-persistedstate works.
+    SIMULATE_FILE_DATA_UPDATE (state) {
+      state.file.data = state.file.data // eslint-disable-line
     },
     SET_FILE_SERIALISATION (state, parseMeta) {
       state.file.serialisation = parseMeta
@@ -121,7 +127,7 @@ export default new Vuex.Store({
     },
     async parseFileData ({ commit }, contents) {
       const result = await Papa.parse(contents)
-      commit('SET_FILE_DATA', result.data)
+      commit('SET_FILE_DATA_AND_ORIGINAL', result.data)
       commit('SET_FILE_SERIALISATION', result.meta)
     },
     createDiff ({ state, commit }) {

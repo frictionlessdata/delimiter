@@ -59,7 +59,7 @@ export default {
       'getFileData'
     ]),
     ...mapMutations({
-      setFileData: 'SET_FILE_DATA'
+      simulateFileDataUpdate: 'SIMULATE_FILE_DATA_UPDATE'
     }),
     async fetch () {
       this.isLoading = true
@@ -76,7 +76,7 @@ export default {
       // Handsontable mutates the `data` object passed to it,
       // so this isn't for traditional flux-style updates. Rather,
       // it's only necessary to persist the data to sessionStorage.
-      this.setFileData(this.fileData)
+      this.simulateFileDataUpdate()
     }
   }
 }
