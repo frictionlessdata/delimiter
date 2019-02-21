@@ -9,7 +9,7 @@ import axios from 'axios'
 import omit from 'lodash/omit'
 
 import router from './router'
-import { decode } from '@/util'
+import { encode, decode } from '@/util'
 
 Vue.use(Vuex)
 
@@ -28,6 +28,7 @@ export default new Vuex.Store({
         branch: null,
         path: null
       },
+      sha: null,
       data: null,
       originalData: null,
       serialisation: null,
@@ -52,6 +53,9 @@ export default new Vuex.Store({
       state.user.authToken = null
       state.user.username = null
       state.user.avatarUrl = null
+    },
+    SET_FILE_SHA (state, sha) {
+      state.file.sha = sha
     },
     SET_FILE_LOCATION (state, { origin, repo, branch, path }) {
       state.file.location.origin = origin
@@ -120,8 +124,12 @@ export default new Vuex.Store({
         owner: origin,
         repo,
         ref: branch,
-        path
+        path,
+        headers: {
+          'If-None-Match': '' // don't use cache
+        }
       })
+      commit('SET_FILE_SHA', response.data.sha)
       // uncommon for an action to return something, but necessary b/c of parent action
       return decode(response.data.content)
     },
@@ -141,6 +149,24 @@ export default new Vuex.Store({
       const diffTable = new daff.TableView([])
       highlighter.hilite(diffTable)
       commit('SET_FILE_DIFF', diffTable)
+    },
+    async save ({ state, commit }, message) {
+      const { origin: owner, repo, branch, path } = state.file.location
+      const sha = state.file.sha
+
+      const serialisationOpts = {
+        delimiter: state.file.serialisation.delimiter,
+        newline: state.file.serialisation.linebreak // not sure why Papaparse uses different property names
+      }
+      const csv = Papa.unparse(state.file.data, serialisationOpts)
+      const content = encode(csv)
+
+      const token = state.user.authToken
+      const octokit = new Octokit({ auth: `token ${token}` })
+
+      const result = await octokit.repos.updateFile({ owner, repo, branch, path, message, sha, content })
+      commit('RESET_FILE') // flush the changes
+      return result
     }
   }
 })
