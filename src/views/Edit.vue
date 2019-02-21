@@ -11,6 +11,9 @@
       :manual-column-resize="true"
       :manual-row-resize="true"
       :after-change="onChange"
+      :context-menu="true"
+      :allow-insert-column="false"
+      :allow-remove-column="false"
       col-widths="200px" />
   </div>
 </template>
