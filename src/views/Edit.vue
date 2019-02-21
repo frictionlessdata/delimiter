@@ -1,6 +1,6 @@
 <template>
   <div id="hot-container">
-    <Loading :active="isLoading" />
+    <BLoading :active="isLoading" />
     <div
       v-if="error"
       class="notification is-danger">
@@ -24,14 +24,12 @@
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex'
 import { HotTable } from '@handsontable/vue'
-import { Loading } from 'buefy/dist/components/loading'
 import pick from 'lodash/pick'
 import isEqual from 'lodash/isEqual'
 
 export default {
   components: {
-    HotTable,
-    Loading
+    HotTable
   },
   data () {
     return {
@@ -46,6 +44,12 @@ export default {
     },
     fileLocation (state) {
       return pick(state.route.params, ['origin', 'repo', 'branch', 'path'])
+    },
+    fileName (state) {
+      const path = state.file.location.path
+      if (!path) return ''
+      const parts = path.split('/')
+      return parts[parts.length - 1]
     }
   }),
   watch: {

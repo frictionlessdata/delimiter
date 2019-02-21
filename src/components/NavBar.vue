@@ -39,7 +39,8 @@
             <router-link
               v-if="isFileLoaded"
               :to="saveLink"
-              class="button">
+              class="button"
+              active-class="is-disabled">
               <span class="icon">
                 <font-awesome-icon icon="save" />
               </span>
@@ -64,20 +65,18 @@
             </a>
           </div>
         </div>
-        <a
+        <router-link
           v-else
-          :href="loginLink"
+          to="/login"
           class="navbar-item">
           Login
-        </a>
+        </router-link>
       </div>
     </div>
   </nav>
 </template>
 
 <script>
-import { stringify } from 'query-string'
-
 export default {
   props: {
     isFileLoaded: {
@@ -105,16 +104,7 @@ export default {
     },
     saveLink () {
       const { origin, repo, branch, path } = this.fileLocation
-      return `/compare/${origin}/${repo}/${branch}/${path}`
-    },
-    loginLink () {
-      const githubUrl = 'https://github.com/login/oauth/authorize'
-      const params = {
-        client_id: process.env.VUE_APP_GITHUB_CLIENT_ID,
-        redirect_uri: window.location.href,
-        scope: 'public_repo'
-      }
-      return `${githubUrl}?${stringify(params)}`
+      return `/save/${origin}/${repo}/${branch}/${path}`
     }
   }
 }

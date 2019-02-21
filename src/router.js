@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Edit from './views/Edit'
-import Compare from './views/Compare'
+import Save from './views/Save'
+import { constructLoginUrl } from '@/util'
 
 Vue.use(Router)
 
@@ -21,9 +22,16 @@ export default new Router({
       component: Edit
     },
     {
-      path: '/compare/:origin/:repo/:branch/:path*',
-      name: 'compare',
-      component: Compare
+      path: '/save/:origin/:repo/:branch/:path*',
+      name: 'save',
+      component: Save
+    },
+    {
+      path: '/login',
+      name: 'login',
+      beforeEnter () {
+        window.location.href = constructLoginUrl()
+      }
     }
   ]
 })
