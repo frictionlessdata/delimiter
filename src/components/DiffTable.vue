@@ -14,7 +14,7 @@
         <!-- eslint-disable-next-line vue/require-v-for-key -->
         <td
           v-for="col in row"
-          :class="{'is-selected': col.includes('->')}">
+          :class="{'is-selected': col && col.includes('->')}">
           {{ col }}
         </td>
       </tr>
