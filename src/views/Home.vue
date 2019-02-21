@@ -24,7 +24,11 @@
                 placeholder="https://github.com/user/repo/blob/master/data.csv"
                 required>
               <p class="help">
-                Raw or UI URLs will work
+                You can use either the regular or "raw" URL. Or
+                <router-link :to="trySampleLink">
+                  try a sample dataset
+                </router-link>
+                .
               </p>
             </div>
             <div class="control">
@@ -42,6 +46,9 @@
 </template>
 
 <script>
+import { simplifyGithubUrl } from '@/util'
+const SAMPLE_DATA_URL = process.env.VUE_APP_SAMPLE_DATA_URL
+
 export default {
   data () {
     return {
@@ -49,20 +56,13 @@ export default {
     }
   },
   computed: {
-    fileUrl () {
-      const url = new URL(this.csvUrl)
-      if (url.hostname === 'github.com') {
-        return url.pathname.replace('/blob', '')
-      } else if (url.hostname === 'raw.githubusercontent.com') {
-        return url.pathname
-      } else {
-        return '/'
-      }
+    trySampleLink () {
+      return `/edit${simplifyGithubUrl(SAMPLE_DATA_URL)}`
     }
   },
   methods: {
     openFile () {
-      this.$router.push(`/edit${this.fileUrl}`)
+      this.$router.push(`/edit${simplifyGithubUrl(this.csvUrl)}`)
     }
   }
 }
