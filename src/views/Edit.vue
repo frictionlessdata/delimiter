@@ -1,11 +1,5 @@
 <template>
   <div id="hot-container">
-    <BLoading :active="isLoading" />
-    <div
-      v-if="error"
-      class="notification is-danger">
-      {{ error }}
-    </div>
     <HotTable
       v-if="fileData"
       ref="hot"
@@ -30,12 +24,6 @@ import isEqual from 'lodash/isEqual'
 export default {
   components: {
     HotTable
-  },
-  data () {
-    return {
-      isLoading: false,
-      error: null
-    }
   },
   computed: mapState({
     fileData: (state) => state.file.data,
@@ -66,15 +54,18 @@ export default {
       simulateFileDataUpdate: 'SIMULATE_FILE_DATA_UPDATE'
     }),
     async fetch () {
-      this.isLoading = true
-      this.error = null
+      const loadingIndicator = this.$loading.open()
       try {
         await this.fetchAndParseFile(this.fileLocation)
       } catch (err) {
-        this.error = err.message
+        this.$snackbar.open({
+          type: 'is-danger',
+          message: 'We encountered an error whilst loading the file'
+        })
         console.log(err)
+        this.$router.push('/')
       } finally {
-        this.isLoading = false
+        loadingIndicator.close()
       }
     },
     onChange () {
