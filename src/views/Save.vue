@@ -103,13 +103,13 @@ export default {
   methods: {
     ...mapActions([
       'createDiff',
-      'save'
+      'saveFile'
     ]),
     async onSubmit (event) {
       const loadingIndicator = this.$loading.open()
       try {
         const editLink = this.editLink // cache this since it will be reset by action
-        const result = await this.save(this.summary)
+        const result = await this.saveFile(this.summary)
         this.$snackbar.open({
           message: 'Saved',
           actionText: 'View',
@@ -123,6 +123,7 @@ export default {
           type: 'is-danger',
           message: 'We encountered an error whilst saving'
         })
+        console.error(err)
       } finally {
         loadingIndicator.close()
       }

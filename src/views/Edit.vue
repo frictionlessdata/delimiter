@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      'getFileData'
+      'fetchAndParseFile'
     ]),
     ...mapMutations({
       simulateFileDataUpdate: 'SIMULATE_FILE_DATA_UPDATE'
@@ -69,9 +69,10 @@ export default {
       this.isLoading = true
       this.error = null
       try {
-        await this.getFileData(this.fileLocation)
+        await this.fetchAndParseFile(this.fileLocation)
       } catch (err) {
         this.error = err.message
+        console.log(err)
       } finally {
         this.isLoading = false
       }

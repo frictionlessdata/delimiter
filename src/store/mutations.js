@@ -13,17 +13,17 @@ export default {
     state.user.username = null
     state.user.avatarUrl = null
   },
-  SET_FILE_SHA (state, sha) {
-    state.file.sha = sha
-  },
-  SET_FILE_LOCATION (state, { origin, repo, branch, path }) {
+  SET_FILE (state, { location, sha, data, serialisation }) {
+    const { origin, repo, branch, path } = location
     state.file.location.origin = origin
     state.file.location.repo = repo
     state.file.location.branch = branch
     state.file.location.path = path
-  },
-  SET_FILE_DATA_AND_ORIGINAL (state, data) {
+    state.file.sha = sha
     state.file.data = data
+    state.file.serialisation = serialisation
+
+    // Retain a separate copy of the original data so we can diff
     state.file.originalData = cloneDeep(data)
   },
   // Since handsontable mutates its data directly, flux-style data flow isn't
