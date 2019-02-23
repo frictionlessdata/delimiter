@@ -14,6 +14,7 @@
       :context-menu="true"
       :allow-insert-column="false"
       :allow-remove-column="false"
+      :fixed-rows-top="1"
       col-widths="200px" />
   </div>
 </template>
