@@ -25,10 +25,8 @@
                 required>
               <p class="help">
                 You can use either the regular or "raw" URL. Or
-                <router-link :to="trySampleLink">
-                  try a sample dataset
-                </router-link>
-                .
+                <!-- eslint-disable-next-line vue/singleline-html-element-content-newline -->
+                <router-link :to="trySampleLink">try a sample dataset</router-link>.
               </p>
             </div>
             <div class="control">
@@ -67,3 +65,11 @@ export default {
   }
 }
 </script>
+
+<style lang="sass">
+$orange: #EB6619
+
+.hero-body a
+  text-decoration: underline
+  color: $orange !important
+</style>
