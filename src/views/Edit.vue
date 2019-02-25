@@ -10,7 +10,9 @@
       stretch-h="all"
       :manual-column-resize="true"
       :manual-row-resize="true"
-      :after-change="onChange"
+      :after-change="afterChange"
+      :after-create-row="afterCreateRow"
+      :after-remove-row="afterRemoveRow"
       :context-menu="true"
       :allow-insert-column="false"
       :allow-remove-column="false"
@@ -55,7 +57,7 @@ export default {
       'fetchAndParseFile'
     ]),
     ...mapMutations({
-      simulateFileDataUpdate: 'SIMULATE_FILE_DATA_UPDATE'
+      setFileData: 'SET_FILE_DATA'
     }),
     async fetch () {
       const loadingIndicator = this.$loading.open()
@@ -72,11 +74,21 @@ export default {
         loadingIndicator.close()
       }
     },
-    onChange () {
-      // Handsontable mutates the `data` object passed to it,
-      // so this isn't for traditional flux-style updates. Rather,
-      // it's only necessary to persist the data to sessionStorage.
-      this.simulateFileDataUpdate()
+    afterChange (changes, source) {
+      if (source !== 'loadData') this.handleChange()
+    },
+    afterCreateRow (index, amount, source) {
+      if (source !== 'loadData') this.handleChange()
+    },
+    afterRemoveRow (index, amount, physicalRows, source) {
+      if (source !== 'loadData') this.handleChange()
+    },
+    handleChange () {
+      const hotInstance = this.$refs.hot.hotInstance
+      if (hotInstance) {
+        const data = hotInstance.getSourceData()
+        this.setFileData(data)
+      }
     }
   }
 }
