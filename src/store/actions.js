@@ -88,7 +88,7 @@ export async function fetchFile ({ origin, repo, branch, path }) {
 }
 
 export function parseFile (decodedContent) {
-  return Papa.parse(decodedContent)
+  return Papa.parse(decodedContent, { skipEmptyLines: true })
 }
 
 export function toCsv (data, meta) {
