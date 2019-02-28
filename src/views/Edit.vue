@@ -37,7 +37,7 @@ export default {
       return !!this.fileData && isEqual(this.fileLocation, state.file.location)
     },
     fileLocation (state) {
-      return pick(state.route.params, ['origin', 'repo', 'branch', 'path'])
+      return pick(state.route.params, ['owner', 'repo', 'branch', 'path'])
     },
     fileName (state) {
       const path = state.file.location.path

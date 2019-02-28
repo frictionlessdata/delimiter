@@ -17,12 +17,12 @@ export default new Router({
       component: Home
     },
     {
-      path: '/edit/:origin/:repo/:branch/:path*',
+      path: '/edit/:owner/:repo/:branch/:path*',
       name: 'edit',
       component: Edit
     },
     {
-      path: '/save/:origin/:repo/:branch/:path*',
+      path: '/save/:owner/:repo/:branch/:path*',
       name: 'save',
       component: Save
     },

@@ -86,11 +86,11 @@ export default {
       return state.file.diff && state.file.diff.data.length > 1
     },
     routeFileLocation (state) {
-      return pick(state.route.params, ['origin', 'repo', 'branch', 'path'])
+      return pick(state.route.params, ['owner', 'repo', 'branch', 'path'])
     },
     editLink (state) {
-      const { origin, repo, branch, path } = state.file.location
-      return `/edit/${origin}/${repo}/${branch}/${path}`
+      const { owner, repo, branch, path } = state.file.location
+      return `/edit/${owner}/${repo}/${branch}/${path}`
     },
     isLoggedIn (state) {
       return !!state.user.authToken

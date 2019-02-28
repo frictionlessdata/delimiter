@@ -42,7 +42,7 @@ export default {
     commit('SET_FILE_DIFF', diffTable)
   },
   async saveFile ({ state, commit }, message) {
-    const { origin: owner, repo, branch, path } = state.file.location
+    const { owner, repo, branch, path } = state.file.location
     const sha = state.file.sha
     const authToken = state.user.authToken
 
@@ -71,11 +71,11 @@ export async function fetchUserInfo (authToken) {
   return userInfo
 }
 
-export async function fetchFile ({ origin, repo, branch, path }) {
+export async function fetchFile ({ owner, repo, branch, path }) {
   const disableCache = { 'If-None-Match': '' } // See octokit/rest.js#890
   const octokit = new Octokit()
   const response = await octokit.repos.getContents({
-    owner: origin,
+    owner,
     repo,
     ref: branch,
     path,

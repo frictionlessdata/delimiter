@@ -103,8 +103,8 @@ export default {
       return !!this.user.authToken
     },
     saveLink () {
-      const { origin, repo, branch, path } = this.fileLocation
-      return `/save/${origin}/${repo}/${branch}/${path}`
+      const { owner, repo, branch, path } = this.fileLocation
+      return `/save/${owner}/${repo}/${branch}/${path}`
     }
   }
 }

@@ -16,7 +16,7 @@ export default new Vuex.Store({
     },
     file: {
       location: {
-        origin: null,
+        owner: null,
         repo: null,
         branch: null,
         path: null

@@ -14,8 +14,8 @@ export default {
     state.user.avatarUrl = null
   },
   SET_FILE (state, { location, sha, data, serialisation }) {
-    const { origin, repo, branch, path } = location
-    state.file.location.origin = origin
+    const { owner, repo, branch, path } = location
+    state.file.location.owner = owner
     state.file.location.repo = repo
     state.file.location.branch = branch
     state.file.location.path = path
@@ -40,7 +40,7 @@ export default {
     state.file.originalData = null
     state.file.serialisation = null
     state.file.diff = null
-    state.file.location.origin = null
+    state.file.location.owner = null
     state.file.location.repo = null
     state.file.location.branch = null
     state.file.location.path = null
