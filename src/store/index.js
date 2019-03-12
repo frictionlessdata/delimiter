@@ -25,7 +25,8 @@ export default new Vuex.Store({
       data: null,
       originalData: null,
       serialisation: null,
-      diff: null
+      diff: null,
+      hasWritePermission: null
     }
   },
   plugins: [

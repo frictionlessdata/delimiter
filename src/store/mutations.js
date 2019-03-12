@@ -35,11 +35,15 @@ export default {
   SET_FILE_DIFF (state, diff) {
     state.file.diff = diff
   },
+  SET_FILE_PERMISSION (state, hasWritePermission) {
+    state.file.hasWritePermission = hasWritePermission
+  },
   RESET_FILE (state) {
     state.file.data = null
     state.file.originalData = null
     state.file.serialisation = null
     state.file.diff = null
+    state.file.hasWritePermission = null
     state.file.location.owner = null
     state.file.location.repo = null
     state.file.location.branch = null

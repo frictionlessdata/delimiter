@@ -52,6 +52,14 @@ export default {
     const result = await octokit.repos.updateFile({ owner, repo, branch, path, message, sha, content })
     commit('RESET_FILE') // force a refetch to refresh originalData
     return result // allows view to display link to commit
+  },
+  async fetchFilePermission ({ state, commit }) {
+    const { owner, repo } = state.file.location
+    const authToken = state.user.authToken
+    const octokit = new Octokit({ auth: `token ${authToken}` })
+    const response = await octokit.repos.get({ owner, repo })
+    const hasWritePermission = response.data.permissions.push
+    commit('SET_FILE_PERMISSION', hasWritePermission)
   }
 }
 

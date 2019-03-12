@@ -2,8 +2,28 @@
   <section
     v-if="hasChanges"
     class="section">
+    <div
+      v-if="!isLoggedIn"
+      class="notification">
+      Please
+      <router-link to="/login">
+        Login
+      </router-link>
+      to continue.
+    </div>
+
+    <div
+      v-else-if="hasWritePermission === false"
+      class="notification">
+      You don't have write access to this GitHub repository.
+      Please
+      <!-- eslint-disable-next-line vue/singleline-html-element-content-newline -->
+      <a href="https://help.github.com/en/articles/fork-a-repo">fork it</a>
+      and edit your fork to continue.
+    </div>
+
     <form
-      v-if="isLoggedIn"
+      v-else
       @submit.prevent="onSubmit">
       <div class="field">
         <label for="summary">
@@ -35,16 +55,6 @@
         </div>
       </div>
     </form>
-
-    <div
-      v-else
-      class="notification">
-      Please
-      <router-link to="/login">
-        Login
-      </router-link>
-      to continue.
-    </div>
 
     <DiffTable :diff="fileDiff.data" />
   </section>
@@ -94,16 +104,23 @@ export default {
     },
     isLoggedIn (state) {
       return !!state.user.authToken
-    }
+    },
+    hasWritePermission: (state) => state.file.hasWritePermission
   }),
   created () {
-    if (this.isFileLoaded) this.createDiff()
+    if (this.isFileLoaded) {
+      this.createDiff()
+      if (this.isLoggedIn && this.hasWritePermission === null) {
+        this.fetchFilePermission()
+      }
+    }
     // TODO: else redirect to /edit/
   },
   methods: {
     ...mapActions([
       'createDiff',
-      'saveFile'
+      'saveFile',
+      'fetchFilePermission'
     ]),
     async onSubmit (event) {
       const loadingIndicator = this.$loading.open()
