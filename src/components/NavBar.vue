@@ -110,9 +110,12 @@ export default {
 }
 </script>
 
-<style lang="sass">
-.navbar-brand .navbar-item
-  font-weight: bold
-  font-size: 150%
-  text-transform: uppercase
+<style lang="sass" scoped>
+.navbar
+  z-index: 999
+
+  .navbar-brand .navbar-item
+    font-weight: bold
+    font-size: 150%
+    text-transform: uppercase
 </style>
