@@ -24,9 +24,20 @@ export default {
     authCode: (state) => state.route.query.code,
     user: (state) => state.user
   }),
-  created () {
+  async created () {
     if (this.authCode) {
-      this.finishLogin(this.authCode)
+      const loadingIndicator = this.$loading.open()
+      try {
+        await this.finishLogin(this.authCode)
+      } catch (err) {
+        this.$snackbar.open({
+          type: 'is-danger',
+          message: 'Login failed'
+        })
+        console.error('yikes', err)
+      } finally {
+        loadingIndicator.close()
+      }
     }
   },
   methods: {

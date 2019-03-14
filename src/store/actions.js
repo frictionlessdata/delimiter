@@ -11,15 +11,20 @@ const GATEKEEPER_HOST = process.env.VUE_APP_GATEKEEPER_HOST
 
 export default {
   async finishLogin ({ commit, state }, authCode) {
-    const authToken = await fetchAuthToken(authCode)
-    commit('SET_USER_AUTH_TOKEN', authToken)
+    try {
+      const authToken = await fetchAuthToken(authCode)
+      commit('SET_USER_AUTH_TOKEN', authToken)
 
-    const userInfo = await fetchUserInfo(authToken)
-    commit('SET_USER_INFO', userInfo)
-
-    // Remove ?code from URL query
-    const urlQueryWithoutCode = omit(state.route.query, 'code')
-    router.replace({ query: urlQueryWithoutCode })
+      const userInfo = await fetchUserInfo(authToken)
+      commit('SET_USER_INFO', userInfo)
+    } catch (err) {
+      // Wrapped in try/catch to ensure URL is updated no matter what
+      throw err
+    } finally {
+      // Remove ?code from URL query no matter what
+      const urlQueryWithoutCode = omit(state.route.query, 'code')
+      router.replace({ query: urlQueryWithoutCode })
+    }
   },
   async fetchAndParseFile ({ commit }, fileLocation) {
     commit('RESET_FILE') // TODO: Investigate whether this should be called from the view instead
